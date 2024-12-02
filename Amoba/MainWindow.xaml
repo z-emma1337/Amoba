@@ -1,0 +1,18 @@
+﻿<Window x:Class="Amoba.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Amoba"
+        mc:Ignorable="d"
+        Title="Amőba © Zarycki Emma" Height="328" Width="462">
+    <Grid Margin="0,0,0,-6">
+        <Label x:Name="label_amoba" Content="Amőba" HorizontalAlignment="Center" Margin="0,35,0,0" VerticalAlignment="Top" FontSize="48"/>
+        <Label x:Name="label_tablamerete" Content="Tábla mérete: 5" HorizontalAlignment="Center" Margin="0,131,0,0" VerticalAlignment="Top" FontSize="20"/>
+        <Slider x:Name="slider_tablameret" HorizontalAlignment="Center" Margin="0,173,0,0" VerticalAlignment="Top" Width="275" Height="18" Minimum="5" Value="5"/>
+        <Button Content="2 játékos" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" HorizontalContentAlignment="Center" Height="43" Width="98" Margin="94,217,0,0" RenderTransformOrigin="0.515,0.571"/>
+        <Button Content="Gép ellen" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" HorizontalContentAlignment="Center" Height="43" Width="98" Margin="270,217,0,0"/>
+
+
+    </Grid>
+</Window>
