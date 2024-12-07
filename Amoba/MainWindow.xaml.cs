@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.Metrics;
+﻿using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
@@ -18,6 +19,55 @@ namespace Amoba
     /// </summary>
     public partial class MainWindow : Window
     {
+        
+        public static Label label_amoba = new Label
+        {
+            Content = "Amőba",
+            FontSize = 50,
+            VerticalAlignment = VerticalAlignment.Top,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Margin = new Thickness(10)
+        };
+
+        public static Label label_tablamerete = new Label
+        {
+            Content = "Tábla mérete: 5",
+            FontSize = 35,
+            VerticalAlignment = VerticalAlignment.Top,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Margin = new Thickness(10)
+        };
+
+        public static Slider slider_tablameret = new Slider
+        {
+            Margin = new Thickness(0, 10, 0, 0),
+            Width = 300,
+            Height = 50,
+            Minimum = 5,
+            Maximum = 10,
+            Value = 5,
+            TickFrequency = 1,
+            IsSnapToTickEnabled = true,
+
+
+        };
+        public static Button btn_2jatekos = new Button
+        {
+            Content = "2 játékos",
+            FontSize = 20,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Padding = new Thickness(60, 10, 60, 10),
+            Margin = new Thickness(40, 15, 15, 15),
+        };
+        public static Button btn_gepellen = new Button
+        {
+            Content = "Gép ellen",
+            FontSize = 20,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            Padding = new Thickness(60, 10, 60, 10),
+            Margin = new Thickness(15,15,40,15),
+        };
+
         public static bool x = true;
         public static bool o = false;
         public static Button[,] gameButtons;
@@ -148,7 +198,7 @@ namespace Amoba
                             }
                             else
                             {
-                                break; 
+                                break;
                             }
                         }
                     }
@@ -175,7 +225,7 @@ namespace Amoba
                             }
                             else
                             {
-                                break; 
+                                break;
                             }
                         }
                     }
@@ -292,20 +342,115 @@ namespace Amoba
 
         public static void Kezdolap()
         {
+
+            Grid kezdolap = new Grid();
+            kezdolap.RowDefinitions.Clear();
+            kezdolap.Children.Clear();
+            kezdolap.ColumnDefinitions.Clear();
+            
+            
+            kezdolap.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            kezdolap.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            kezdolap.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            kezdolap.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+
+            Grid.SetRow(label_amoba, 0);
+            kezdolap.Children.Add(label_amoba);
+
+            Grid.SetRow(label_tablamerete, 1);
+            kezdolap.Children.Add(label_tablamerete);
+
+            Grid.SetRow(slider_tablameret, 2);
+            kezdolap.Children.Add(slider_tablameret);
+
+            Grid.SetRow(btn_2jatekos, 3);
+            kezdolap.Children.Add(btn_2jatekos);
+
+            Grid.SetRow(btn_gepellen, 3);
+            kezdolap.Children.Add(btn_gepellen);
+
+            label_amoba.Visibility = Visibility.Visible;
+            label_tablamerete.Visibility = Visibility.Visible;
+            slider_tablameret.Visibility = Visibility.Visible;
+            btn_gepellen.Visibility = Visibility.Visible;
+            btn_2jatekos.Visibility = Visibility.Visible;
+
+            Application.Current.MainWindow.Content = kezdolap;
+            Application.Current.MainWindow.Width = 600;
+            Application.Current.MainWindow.Height = 400;
+            Application.Current.MainWindow.ResizeMode = ResizeMode.NoResize;
+        }
+
+        public static void Ujjatek()
+        {
+            // Tábla gombok újrainicializálása
+            if (gameButtons != null)
+            {
+                foreach (Button button in gameButtons)
+                {
+                    button.Content = "";
+                    button.IsEnabled = true;
+                }
+            }
+
+            // Kezdőlap visszaállítása
             Grid kezdolap = new Grid();
             kezdolap.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
             kezdolap.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
             kezdolap.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
             kezdolap.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-            Label label = new Label(label_amoba);
-            
-        }
 
+            // UI elemek megjelenítése
+            label_amoba.Visibility = Visibility.Visible;
+            label_tablamerete.Visibility = Visibility.Visible;
+            slider_tablameret.Visibility = Visibility.Visible;
+            btn_gepellen.Visibility = Visibility.Visible;
+            btn_2jatekos.Visibility = Visibility.Visible;
+
+            kovetkezo.Content = "Következik: X";
+            kovetkezo.Visibility = Visibility.Hidden; // Csak a játék kezdetekor látható
+
+            // Elemek hozzáadása a gridhez
+            Grid.SetRow(label_amoba, 0);
+            kezdolap.Children.Add(label_amoba);
+
+            Grid.SetRow(label_tablamerete, 1);
+            kezdolap.Children.Add(label_tablamerete);
+
+            Grid.SetRow(slider_tablameret, 2);
+            kezdolap.Children.Add(slider_tablameret);
+
+            Grid.SetRow(btn_2jatekos, 3);
+            kezdolap.Children.Add(btn_2jatekos);
+
+            Grid.SetRow(btn_gepellen, 3);
+            kezdolap.Children.Add(btn_gepellen);
+
+            // Alkalmazás ablakának frissítése
+            Application.Current.MainWindow.Content = kezdolap;
+            Application.Current.MainWindow.Width = 600;
+            Application.Current.MainWindow.Height = 400;
+            Application.Current.MainWindow.ResizeMode = ResizeMode.NoResize;
+
+            // Játékállapot alaphelyzetbe állítása
+            x = true;
+            o = false;
+        }
 
 
         public MainWindow()
         {
             InitializeComponent();
+            Kezdolap();
+            
+            slider_tablameret.ValueChanged += slider_tablameret_Changed;
+            btn_2jatekos.Click += btn_2jatekos_Click;
+            btn_gepellen.Click += Btn_gepellen_Click;
+        }
+
+        private void Btn_gepellen_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void btn_2jatekos_Click(object sender, RoutedEventArgs e)
@@ -392,7 +537,7 @@ namespace Amoba
 
         private void UjJatek_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            Kezdolap();
         }
 
         private void slider_tablameret_Changed(object sender, RoutedPropertyChangedEventArgs<double> e)
