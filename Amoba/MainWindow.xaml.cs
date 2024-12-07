@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.Metrics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,6 +21,30 @@ namespace Amoba
         public static bool x = true;
         public static bool o = false;
         public static Button[,] gameButtons;
+        public static Button UjJatek = new Button
+
+        {
+            Content = "Új játék",
+            FontSize = 20,
+            Name = "btn_ujjatek",
+            Visibility = Visibility.Visible,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Padding = new Thickness(60, 10, 60, 10),
+            Margin = new Thickness(15),
+
+
+        };
+        public static Button JatekMentese = new Button
+        {
+            Content = "Játék mentése",
+            FontSize = 20,
+            Name = "btn_jatekmentese",
+            Visibility = Visibility.Visible,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            Padding = new Thickness(30, 10, 30, 10),
+            Margin = new Thickness(15),
+
+        };
 
         public static Label kovetkezo = new Label
         {
@@ -265,6 +290,17 @@ namespace Amoba
             }
         }
 
+        public static void Kezdolap()
+        {
+            Grid kezdolap = new Grid();
+            kezdolap.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            kezdolap.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            kezdolap.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            kezdolap.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            Label label = new Label(label_amoba);
+            
+        }
+
 
 
         public MainWindow()
@@ -289,12 +325,21 @@ namespace Amoba
 
             parentGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Label helye
             parentGrid.RowDefinitions.Add(new RowDefinition()); // Játék helye
+            parentGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
 
 
 
             Grid.SetRow(kovetkezo, 0);
             parentGrid.Children.Add(kovetkezo);
+
+            Grid.SetRow(UjJatek, 2);
+            UjJatek.Click += UjJatek_Click;
+            parentGrid.Children.Add(UjJatek);
+
+            Grid.SetRow(JatekMentese, 2);
+            JatekMentese.Click += JatekMentese_Click;
+            parentGrid.Children.Add(JatekMentese);
 
             Grid gameGrid = new Grid
             {
@@ -337,8 +382,18 @@ namespace Amoba
             parentGrid.Children.Add(gameGrid);
 
             this.Content = parentGrid;
+
         }
 
+        private void JatekMentese_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void UjJatek_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
 
         private void slider_tablameret_Changed(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
