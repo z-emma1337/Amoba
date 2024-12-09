@@ -398,64 +398,6 @@ namespace Amoba
             Application.Current.MainWindow.Height = 400;
             Application.Current.MainWindow.ResizeMode = ResizeMode.NoResize;
         }
-
-        public static void Ujjatek()
-        {
-            // Tábla gombok újrainicializálása
-            if (gameButtons != null)
-            {
-                foreach (Button button in gameButtons)
-                {
-                    button.Content = "";
-                    button.IsEnabled = true;
-                }
-            }
-
-            // Kezdőlap visszaállítása
-            Grid kezdolap = new Grid();
-            kezdolap.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-            kezdolap.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-            kezdolap.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-            kezdolap.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-
-            // UI elemek megjelenítése
-            label_amoba.Visibility = Visibility.Visible;
-            label_tablamerete.Visibility = Visibility.Visible;
-            slider_tablameret.Visibility = Visibility.Visible;
-            btn_gepellen.Visibility = Visibility.Visible;
-            btn_2jatekos.Visibility = Visibility.Visible;
-
-            kovetkezo.Content = "Következik: X";
-            kovetkezo.Visibility = Visibility.Hidden; // Csak a játék kezdetekor látható
-
-            // Elemek hozzáadása a gridhez
-            Grid.SetRow(label_amoba, 0);
-            kezdolap.Children.Add(label_amoba);
-
-            Grid.SetRow(label_tablamerete, 1);
-            kezdolap.Children.Add(label_tablamerete);
-
-            Grid.SetRow(slider_tablameret, 2);
-            kezdolap.Children.Add(slider_tablameret);
-
-            Grid.SetRow(btn_2jatekos, 3);
-            kezdolap.Children.Add(btn_2jatekos);
-
-            Grid.SetRow(btn_gepellen, 3);
-            kezdolap.Children.Add(btn_gepellen);
-
-            // Alkalmazás ablakának frissítése
-            Application.Current.MainWindow.Content = kezdolap;
-            Application.Current.MainWindow.Width = 600;
-            Application.Current.MainWindow.Height = 400;
-            Application.Current.MainWindow.ResizeMode = ResizeMode.NoResize;
-
-            // Játékállapot alaphelyzetbe állítása
-            x = true;
-            o = false;
-        }
-
-
         public MainWindow()
         {
             InitializeComponent();
@@ -545,6 +487,7 @@ namespace Amoba
             Grid.SetRow(gameGrid, 1);
             parentGrid.Children.Add(gameGrid);
 
+            Application.Current.MainWindow.ResizeMode = ResizeMode.CanResize;
             this.Content = parentGrid;
 
         }
