@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MySql.Data.MySqlClient;
 
 namespace Amoba
 {
@@ -28,7 +29,6 @@ namespace Amoba
             HorizontalAlignment = HorizontalAlignment.Center,
             Margin = new Thickness(10)
         };
-
         public static Label label_tablamerete = new Label
         {
             Content = "Tábla mérete: 5",
@@ -37,7 +37,6 @@ namespace Amoba
             HorizontalAlignment = HorizontalAlignment.Center,
             Margin = new Thickness(10)
         };
-
         public static Slider slider_tablameret = new Slider
         {
             Margin = new Thickness(0, 10, 0, 0),
@@ -55,19 +54,26 @@ namespace Amoba
         {
             Content = "2 játékos",
             FontSize = 20,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Padding = new Thickness(60, 10, 60, 10),
+            HorizontalAlignment = HorizontalAlignment.Right,
+            Padding = new Thickness(20, 10, 20, 10),
             Margin = new Thickness(40, 15, 15, 15),
         };
         public static Button btn_gepellen = new Button
         {
-            Content = "Gép ellen",
+            Content = "1 játékos",
             FontSize = 20,
-            HorizontalAlignment = HorizontalAlignment.Right,
-            Padding = new Thickness(60, 10, 60, 10),
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Padding = new Thickness(20, 10, 20, 10),
             Margin = new Thickness(15, 15, 40, 15),
         };
-
+        public static Button btn_Betolt = new Button
+        {
+            Content = "Mentés betöltése",
+            FontSize = 20,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Padding = new Thickness(20, 10, 20, 10),
+            Margin = new Thickness(15),
+        };
         public static bool x = true;
         public static bool o = false;
         public static Button[,] gameButtons;
@@ -97,7 +103,6 @@ namespace Amoba
             Margin = new Thickness(15),
 
         };
-
         public static Label kovetkezo = new Label
         {
             Content = "Következik: X",
@@ -106,7 +111,32 @@ namespace Amoba
             HorizontalAlignment = HorizontalAlignment.Center,
             Margin = new Thickness(10)
         };
-
+        public static MySqlConnection Connection = new MySqlConnection("SERVER=localhost;DATABASE=amoba_db;UID=root;PASSWORD=");
+        public static void Mentes()
+        {
+            Connection.Open();
+            DateTime currentDate = DateTime.Now;
+            string helyek = "";
+            foreach (var Button in gameButtons)
+            {
+                if (Button.Content == "X")
+                {
+                    helyek = helyek + "X;";
+                }
+                else if (Button.Content == "O")
+                {
+                    helyek = helyek + "O;";
+                }
+                else
+                {
+                    helyek = helyek + "-;";
+                }
+            }
+            MySqlCommand cmd_Mentes = new MySqlCommand($"insert into mentesek(datum,helyezes) values('{currentDate.ToString("yyyy-MM-dd H:mm:ss")}','{helyek}')", Connection);
+            cmd_Mentes.ExecuteNonQuery();
+            JatekMentese.IsEnabled = false;
+            Connection.Close();
+        }
         public static void buttonsEnable()
         {
             foreach (Button button in gameButtons)
@@ -385,7 +415,10 @@ namespace Amoba
             kezdolap.Children.Add(btn_2jatekos);
 
             Grid.SetRow(btn_gepellen, 3);
-            kezdolap.Children.Add(btn_gepellen);
+            kezdolap.Children.Add(btn_gepellen);            
+            
+            Grid.SetRow(btn_Betolt, 3);
+            kezdolap.Children.Add(btn_Betolt);
 
             label_amoba.Visibility = Visibility.Visible;
             label_tablamerete.Visibility = Visibility.Visible;
@@ -406,6 +439,12 @@ namespace Amoba
             slider_tablameret.ValueChanged += slider_tablameret_Changed;
             btn_2jatekos.Click += btn_2jatekos_Click;
             btn_gepellen.Click += Btn_gepellen_Click;
+            btn_Betolt.Click += Btn_Betolt_Click;
+        }
+
+        private void Btn_Betolt_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void Btn_gepellen_Click(object sender, RoutedEventArgs e)
@@ -489,12 +528,13 @@ namespace Amoba
 
             Application.Current.MainWindow.ResizeMode = ResizeMode.CanResize;
             this.Content = parentGrid;
+            JatekMentese.IsEnabled = true;
 
         }
 
         private void JatekMentese_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            Mentes();
         }
 
         private void UjJatek_Click(object sender, RoutedEventArgs e)
@@ -528,6 +568,7 @@ namespace Amoba
                     x = true;
                 }
                 CheckWin();
+                JatekMentese.IsEnabled = true;
 
             }
         }
