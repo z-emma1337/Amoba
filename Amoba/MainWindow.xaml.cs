@@ -19,7 +19,7 @@ namespace Amoba
     /// </summary>
     public partial class MainWindow : Window
     {
-        
+
         public static Label label_amoba = new Label
         {
             Content = "Amőba",
@@ -65,12 +65,14 @@ namespace Amoba
             FontSize = 20,
             HorizontalAlignment = HorizontalAlignment.Right,
             Padding = new Thickness(60, 10, 60, 10),
-            Margin = new Thickness(15,15,40,15),
+            Margin = new Thickness(15, 15, 40, 15),
         };
 
         public static bool x = true;
         public static bool o = false;
         public static Button[,] gameButtons;
+        private Grid kezdolap = new Grid();
+        private Grid parentGrid = new Grid();
         public static Button UjJatek = new Button
 
         {
@@ -338,17 +340,33 @@ namespace Amoba
                     }
                 }
             }
+
+            else
+            {
+                bool temp = true;
+                foreach (Button button in gameButtons)
+                {
+
+                    if (button.Content == "")
+                    {
+                        temp = false;
+                    }
+                }
+                if (temp)
+                {
+                    kovetkezo.Content = "Döntetlen!";
+                    buttonsDisable();
+                }
+            }
         }
 
-        public static void Kezdolap()
+        public void Kezdolap()
         {
-
-            Grid kezdolap = new Grid();
             kezdolap.RowDefinitions.Clear();
             kezdolap.Children.Clear();
             kezdolap.ColumnDefinitions.Clear();
-            
-            
+
+
             kezdolap.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
             kezdolap.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
             kezdolap.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
@@ -442,7 +460,7 @@ namespace Amoba
         {
             InitializeComponent();
             Kezdolap();
-            
+
             slider_tablameret.ValueChanged += slider_tablameret_Changed;
             btn_2jatekos.Click += btn_2jatekos_Click;
             btn_gepellen.Click += Btn_gepellen_Click;
@@ -455,6 +473,11 @@ namespace Amoba
 
         private void btn_2jatekos_Click(object sender, RoutedEventArgs e)
         {
+            parentGrid.Children.Clear();
+            parentGrid.RowDefinitions.Clear();
+            parentGrid.ColumnDefinitions.Clear();
+
+
             label_amoba.Visibility = Visibility.Hidden;
             slider_tablameret.Visibility = Visibility.Hidden;
             btn_2jatekos.Visibility = Visibility.Hidden;
@@ -465,14 +488,10 @@ namespace Amoba
             this.Height = 120 * slider_tablameret.Value;
 
 
-            Grid parentGrid = new Grid();
-
 
             parentGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // Label helye
             parentGrid.RowDefinitions.Add(new RowDefinition()); // Játék helye
             parentGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-
-
 
 
             Grid.SetRow(kovetkezo, 0);
