@@ -79,6 +79,13 @@ namespace Amoba
         public static Button[,] gameButtons;
         private Grid kezdolap = new Grid();
         private Grid parentGrid = new Grid();
+        private Grid mentesekGrid = new Grid
+        {
+            Margin = new Thickness(20),
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        private Grid parentMentesek = new Grid();
         public static Button UjJatek = new Button
 
         {
@@ -112,7 +119,7 @@ namespace Amoba
             Margin = new Thickness(10)
         };
         public static MySqlConnection Connection = new MySqlConnection("SERVER=localhost;DATABASE=amoba_db;UID=root;PASSWORD=");
-        public static void Mentes()
+        private void Mentes()
         {
             Connection.Open();
             DateTime currentDate = DateTime.Now;
@@ -137,7 +144,7 @@ namespace Amoba
             JatekMentese.IsEnabled = false;
             Connection.Close();
         }
-        public static void buttonsEnable()
+        private void buttonsEnable()
         {
             foreach (Button button in gameButtons)
             {
@@ -145,7 +152,7 @@ namespace Amoba
             }
         }
 
-        public static void buttonsDisable()
+       private void buttonsDisable()
         {
             foreach (Button button in gameButtons)
             {
@@ -153,7 +160,7 @@ namespace Amoba
             }
         }
 
-        public static void CheckWin()
+        private  void CheckWin()
         {
             int rowCount = gameButtons.GetLength(0);
             int colCount = gameButtons.GetLength(1);
@@ -390,7 +397,7 @@ namespace Amoba
             }
         }
 
-        public void Kezdolap()
+        private void Kezdolap()
         {
             kezdolap.RowDefinitions.Clear();
             kezdolap.Children.Clear();
@@ -442,9 +449,64 @@ namespace Amoba
             btn_Betolt.Click += Btn_Betolt_Click;
         }
 
+        private void valasszMentest()
+        {
+            // Rejtett kezdőlap elemek
+            label_amoba.Visibility = Visibility.Hidden;
+            label_tablamerete.Visibility = Visibility.Hidden;
+            slider_tablameret.Visibility = Visibility.Hidden;
+            btn_gepellen.Visibility = Visibility.Hidden;
+            btn_2jatekos.Visibility = Visibility.Hidden;
+            btn_Betolt.Visibility = Visibility.Hidden;
+
+            // Új listához és elrendezéshez előkészület
+            List<string> datumok = new List<string>();
+            Grid mentesekGrid = new Grid();
+            ScrollViewer scrollViewer = new ScrollViewer
+            {
+                VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+                Content = mentesekGrid // ScrollViewer tartalma a Grid lesz
+            };
+
+            // Adatbázis kapcsolat és adatok lekérdezése
+            Connection.Open();
+            MySqlCommand cmd = new MySqlCommand("SELECT datum FROM mentesek", Connection);
+            MySqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                datumok.Add(reader["datum"].ToString());
+            }
+            Connection.Close();
+
+            // Grid sorainak és gombjainak létrehozása
+            for (int i = 0; i < datumok.Count; i++)
+            {
+                Button mentesbtn = new Button
+                {
+                    Content = datumok[i],
+                    FontSize = 35,
+                    Padding = new Thickness(100,5,100,5),
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
+
+
+
+                mentesekGrid.RowDefinitions.Add(new RowDefinition());
+                Grid.SetRow(mentesbtn, i);
+                mentesekGrid.Children.Add(mentesbtn);
+            }
+
+            // Szülő Grid megtisztítása és új elrendezés hozzáadása
+            parentMentesek.Children.Clear();
+            parentMentesek.Children.Add(scrollViewer);
+
+            // Fő ablak frissítése
+            Application.Current.MainWindow.Content = parentMentesek;
+        }
+
         private void Btn_Betolt_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            valasszMentest();
         }
 
         private void Btn_gepellen_Click(object sender, RoutedEventArgs e)
